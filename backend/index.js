@@ -4,7 +4,9 @@ const dotenv = require('dotenv').config();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+var cors = require('cors')
 
+app.use(cors())
 const PORT = process.env.PORT || 4000;
 
 const dbConnect = require('./config/dbConnect');
