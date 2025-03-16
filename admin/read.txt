@@ -1,4 +1,7 @@
-https://www.youtube.com/watch?v=FrM0aec70Fc&list=PL0g02APOH8okXhOQLOLcB_nifs1U41im5&index=6
+#08
+
+https://www.youtube.com/watch?v=fdTAhnH4Zho&ab_channel=DevelopersCorner
 
 
-time = 16.00
+
+time = 31:00

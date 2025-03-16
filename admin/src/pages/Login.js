@@ -30,7 +30,6 @@ export default function Login() {
       navigate('admin')
     }
   }, [user, isLoding, isError, isSuccess, message]);
-  console.log(message);
   return (
     <div className='py-5' style={{ backgroundColor: "#ffd333", minHeight: '100vh' }}>
 

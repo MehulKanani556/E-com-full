@@ -444,14 +444,20 @@ const createOrder = asyncHandler(async (req, res) => {
 });
 
 const getOrders = asyncHandler(async (req, res) => {
-    const { _id } = req.user;
+    const { _id, role } = req.user;
     validateMongoDbId(_id);
     try {
-        const userOrders = await Order.findOne({ orderby: _id }).populate("products.product").exec();
+        let userOrders;
+        if (role === 'admin') {
+            // If user is admin, get all orders
+            userOrders = await Order.find().populate("products.product").populate("orderby").exec();
+        } else {
+            // If regular user, get only their orders
+            userOrders = await Order.findOne({ orderby: _id }).populate("products.product").exec();
+        }
         res.json(userOrders);
     } catch (error) {
         throw new Error(error);
-
     }
 });
 

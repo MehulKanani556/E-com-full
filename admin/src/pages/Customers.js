@@ -11,6 +11,8 @@ const columns = [
     {
         title: 'Name',
         dataIndex: 'name',
+        defaultSortOrder:"descend",
+        sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
         title: 'Email',
@@ -31,7 +33,7 @@ export default function Customers() {
     const { customers, isLoading, isError, isSuccess, message } = useSelector((state) => state.customer);
     
     const dataSource = customers?.filter(customer => customer.role !== 'admin').map((customer, index) => ({
-        key: index,
+        key: index+1,
         name: customer.firstname + " " + customer.lastname,
         email: customer.email,
         mobile: customer.mobile || "N/A"
