@@ -64,12 +64,12 @@ const MainLayout = () => {
                 {
                   key: 'product',
                   icon: <AiOutlineShoppingCart className='fs-4' />,
-                  label: 'Add Prdocust',
+                  label: 'Add product',
                 },
                 {
                   key: 'product-list',
                   icon: <AiOutlineShoppingCart className='fs-4' />,
-                  label: 'Prdocust List',
+                  label: 'Product List',
                 },
                 {
                   key: 'brand',

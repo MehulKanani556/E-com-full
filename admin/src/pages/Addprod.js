@@ -10,6 +10,9 @@ import "react-widgets/styles.css";
 import { getCategories } from '../features/pcategory/pcategorySlice';
 import { getColors } from '../features/color/colorSlice';
 import { Multiselect } from 'react-widgets/cjs';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import Dropzone from 'react-dropzone';
+import { uploadImg } from '../features/upload/uploadSlice';
 
 export default function Addprod() {
     const dispatch = useDispatch();
@@ -24,6 +27,7 @@ export default function Addprod() {
     const { brands } = useSelector((state) => state.brand);
     const { pCategories } = useSelector((state) => state.pcategory);
     const { colors } = useSelector((state) => state.color);
+    const { images } = useSelector((state) => state.upload);
     colors.forEach(i => {
         color.push({
             _id: i._id,
@@ -37,10 +41,10 @@ export default function Addprod() {
         price: Yup.number().required('price is required'),
         brand: Yup.string().required('Brand is required'),
         category: Yup.string().required('Category is required'),
-        color: Yup.array().required('Color is required'),
+        color: Yup.array()
+            .min(1, 'Please select at least one color')
+            .required('Color is required'),
         quantity: Yup.number().required('Quantity is required'),
-
-
     });
     const formik = useFormik({
         initialValues: {
@@ -49,7 +53,7 @@ export default function Addprod() {
             price: '',
             brand: '',
             category: '',
-            color: '',
+            color: [],
             quantity: '',
         },
         validationSchema: userSchema,
@@ -133,24 +137,23 @@ export default function Addprod() {
                     <div className="error">
                         {formik.touched.category && formik.errors.category && <div >{formik.errors.category}</div>}
                     </div>
-                    {/* <select name="" className="form-select py-3 " id="">
-                        <option value="" >Select Color</option>
-                        {colors && colors.map((ele) => {
-                            return (
-                                <option key={ele._id} value={ele.title}>{ele.title}</option>
-                            )
-                        })}
-                    </select> */}
+
                     <Multiselect
                         dataKey="id"
                         textField="color"
                         data={color}
                         name="color"
-                        onChange={(e) => setSelectedColor(e)}
+                        onChange={(e) => {
+                            formik.setFieldValue('color', e);
+                            setSelectedColor(e);
+                        }}
                     />
+
                     <div className="error">
                         {formik.touched.color && formik.errors.color && <div >{formik.errors.color}</div>}
                     </div>
+
+
                     <CustomInput
                         name="quantity"
                         val={formik.values.quantity}
@@ -162,6 +165,29 @@ export default function Addprod() {
                     />
                     <div className="error">
                         {formik.touched.quantity && formik.errors.quantity && <div >{formik.errors.quantity}</div>}
+                    </div>
+                    <div className="bg-white border-1 p-5 text-center">
+                        <Dropzone onDrop={acceptedFiles => dispatch(uploadImg(acceptedFiles))}>
+                            {({ getRootProps, getInputProps }) => (
+                                <section>
+                                    <div {...getRootProps()}>
+                                        <input {...getInputProps()} />
+                                        <p>Drag 'n' drop some files here, or click to select files</p>
+                                    </div>
+                                </section>
+                            )}
+                        </Dropzone>
+                    </div>
+                    <div className="showimages">
+                        {images.map((i,j)=>{
+                            return (
+                                <div key={j} className="m-2 position-relative">
+                                    <img src={i.url} alt={i.name} width={200} height={200}/>
+                                    <button className='btn-close position-absolute ' style={{ top:'10px',left:'10px' }} ></button>
+                                </div>
+                            )
+                        })}
+                       
                     </div>
 
 
