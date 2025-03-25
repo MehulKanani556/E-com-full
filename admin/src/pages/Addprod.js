@@ -12,7 +12,7 @@ import { getColors } from '../features/color/colorSlice';
 import { Multiselect } from 'react-widgets/cjs';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import Dropzone from 'react-dropzone';
-import { uploadImg } from '../features/upload/uploadSlice';
+import { deleteImg, uploadImg } from '../features/upload/uploadSlice';
 
 export default function Addprod() {
     const dispatch = useDispatch();
@@ -178,12 +178,12 @@ export default function Addprod() {
                             )}
                         </Dropzone>
                     </div>
-                    <div className="showimages">
+                    <div className="showimages d-flex flex-wrap gap-3">
                         {images.map((i,j)=>{
                             return (
                                 <div key={j} className="m-2 position-relative">
                                     <img src={i.url} alt={i.name} width={200} height={200}/>
-                                    <button className='btn-close position-absolute ' style={{ top:'10px',left:'10px' }} ></button>
+                                    <button className='btn-close position-absolute ' onClick={()=>dispatch(deleteImg(i.public_id))} style={{ top:'10px',left:'10px' }} ></button>
                                 </div>
                             )
                         })}
