@@ -52,7 +52,7 @@ export const uploadSlice = createSlice({
         })
         builder.addCase(deleteImg.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.images = state.images.filter(img => img.id !== action.payload);
+            state.images = [];
             state.isSuccess = true;
             state.isError = false;
         })

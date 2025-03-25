@@ -13,11 +13,16 @@ const uploadImages = asyncHandler(async (req, res) => {
             const { path } = file;
             const newPath = await uploader(path);
             urls.push(newPath);
-            fs.unlinkSync(path);
+            try {
+                // Add a small delay before attempting to delete the file
+                await new Promise(resolve => setTimeout(resolve, 100));
+                fs.unlinkSync(path);
+            } catch (unlinkError) {
+                console.warn(`Warning: Could not delete temporary file ${path}:`, unlinkError);
+                // Continue execution even if file deletion fails
+            }
         }
-        const images = urls.map(file => {
-            return file
-        });
+        const images = urls.map(file => file);
         res.json(images);
         // const findProduct = await Product.findByIdAndUpdate(id, { images: urls.map(file => { return file }) }, { new: true });
         // res.json(findProduct)

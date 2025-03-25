@@ -13,17 +13,19 @@ import { Multiselect } from 'react-widgets/cjs';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import Dropzone from 'react-dropzone';
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice';
+import { createProduct } from '../features/product/productSlice';
 
 export default function Addprod() {
     const dispatch = useDispatch();
     const color = [];
     const [selectedColor, setSelectedColor] = useState([]);
+    const [imgs, setImgs] = useState([]);
     useEffect(() => {
         dispatch(getBrands());
         dispatch(getCategories());
         dispatch(getColors());
-        formik.values.color = selectedColor;
     }, []);
+
     const { brands } = useSelector((state) => state.brand);
     const { pCategories } = useSelector((state) => state.pcategory);
     const { colors } = useSelector((state) => state.color);
@@ -34,6 +36,17 @@ export default function Addprod() {
             color: i.title,
         });
     });
+    const img = [];
+    images.forEach(i => {
+        img.push({
+            public_id: i.public_id,
+            url: i.url,
+        });
+    });
+    useEffect(() => {
+        formik.values.color = selectedColor;
+        formik.values.images = img;
+    }, [color, imgs]);
 
     let userSchema = Yup.object({
         title: Yup.string().required('Title is required'),
@@ -55,10 +68,12 @@ export default function Addprod() {
             category: '',
             color: [],
             quantity: '',
+            images: [],
         },
         validationSchema: userSchema,
         onSubmit: values => {
             console.log(values);
+            dispatch(createProduct(values));
             // dispatch(login(values))
         },
     });
@@ -179,15 +194,15 @@ export default function Addprod() {
                         </Dropzone>
                     </div>
                     <div className="showimages d-flex flex-wrap gap-3">
-                        {images.map((i,j)=>{
+                        {images.map((i, j) => {
                             return (
                                 <div key={j} className="m-2 position-relative">
-                                    <img src={i.url} alt={i.name} width={200} height={200}/>
-                                    <button className='btn-close position-absolute ' onClick={()=>dispatch(deleteImg(i.public_id))} style={{ top:'10px',left:'10px' }} ></button>
+                                    <button type='button' className='btn-close position-absolute ' onClick={() => dispatch(deleteImg(i.public_id))} style={{ top: '10px', left: '10px' }} ></button>
+                                    <img src={i.url} alt={i.name} width={200} height={200} />
                                 </div>
                             )
                         })}
-                       
+
                     </div>
 
 
