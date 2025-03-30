@@ -11,6 +11,7 @@ import { Button, Layout, Menu, theme } from 'antd';
 import { AiOutlineBgColors, AiOutlineDashboard, AiOutlinePicLeft, AiOutlinePicRight, AiOutlineShoppingCart, AiOutlineUser } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
 import { SiBrandfolder } from 'react-icons/si';
+import { RiCouponLine } from 'react-icons/ri';
 import { BiCategoryAlt } from 'react-icons/bi';
 import { FaBloggerB, FaClipboardList } from 'react-icons/fa';
 import { ImBlog } from 'react-icons/im';
@@ -59,7 +60,7 @@ const MainLayout = () => {
               label: 'Customers',
             },
             {
-              key: 'catalog',
+              key: 'catelog',
               icon: <AiOutlineShoppingCart className='fs-4' />,
               label: 'Catalog',
               children: [
@@ -109,6 +110,23 @@ const MainLayout = () => {
               key: 'orders',
               icon: <FaClipboardList className='fs-4' />,
               label: 'Orders',
+            },
+            {
+              key: 'marketing',
+              icon: <RiCouponLine className='fs-4' />,
+              label: 'Marketing',
+              children: [
+                {
+                  key: 'coupon',
+                  icon: <ImBlog className='fs-4' />,
+                  label: 'Add Coupon',
+                },
+                {
+                  key: 'coupon-list',
+                  icon: <RiCouponLine  className='fs-4' />,
+                  label: 'Coupon-list',
+                }
+              ]
             },
             {
               key: 'blogs',
