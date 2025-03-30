@@ -3,4 +3,4 @@
 https://www.youtube.com/watch?v=RM7METzWp1A&ab_channel=DevelopersCorner
 
 
-time = 00:00
+time = 50:00

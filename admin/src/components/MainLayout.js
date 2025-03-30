@@ -15,6 +15,8 @@ import { BiCategoryAlt } from 'react-icons/bi';
 import { FaBloggerB, FaClipboardList } from 'react-icons/fa';
 import { ImBlog } from 'react-icons/im';
 import { IoIosNotifications } from 'react-icons/io';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css"
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -178,8 +180,8 @@ const MainLayout = () => {
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
 
-                <li className="py-2 "><Link to="/action" className="dropdown-item py-1 mb-1" style={{ "height":"auto",lineHeight:'20px' }}>View Profile</Link></li>
-                <li className="py-2 "><Link to="/something-else" className="dropdown-item py-1 mb-1" style={{ "height":"auto",lineHeight:'20px' }}>Signout</Link></li>
+                <li className="py-2 "><Link to="/action" className="dropdown-item py-1 mb-1" style={{ "height": "auto", lineHeight: '20px' }}>View Profile</Link></li>
+                <li className="py-2 "><Link to="/something-else" className="dropdown-item py-1 mb-1" style={{ "height": "auto", lineHeight: '20px' }}>Signout</Link></li>
 
               </div>
             </div>
@@ -194,6 +196,17 @@ const MainLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
+          <ToastContainer
+            position="top-right"
+            autoClose={250}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            theme="light"
+          />
           <Outlet />
         </Content>
       </Layout>
