@@ -30,7 +30,7 @@ export default function Addbrand() {
     });
     const formik = useFormik({
         initialValues: {
-            title: id?brand.title :'',
+            title: brand.title ||'',
         },
         validationSchema: schema,
         onSubmit: values => {

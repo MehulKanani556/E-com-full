@@ -3,15 +3,21 @@ import CustomInput from '../components/CustomInput';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { createProdCategory } from '../features/pcategory/pcategorySlice';
-import { createColor } from '../features/color/colorSlice';
+import { createColor, getColor, updateColor } from '../features/color/colorSlice';
 
 export default function Addcolor() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuccess, isError, isLoading, message } = useSelector((state) => state.color);
+    const { id } = useParams(); 
+    const { isSuccess, isError, isLoading, message,color } = useSelector((state) => state.color);
+    useEffect(() => {
+        if(id !== undefined) {
+            dispatch(getColor(id));
+        }
+    }, [id]);
     useEffect(() => {
         if (isSuccess) {
             toast.success('Color Added Successfully');
@@ -26,12 +32,16 @@ export default function Addcolor() {
     });
     const formik = useFormik({
         initialValues: {
-            title: '',
+            title: color.title || '',
         },
         validationSchema: schema,
         onSubmit: values => {
             // console.log(values)
-            dispatch(createColor(values));
+            if(id){
+                dispatch(updateColor({id,...values}));
+            }else{
+                dispatch(createColor(values));
+            }
             formik.resetForm();
             setTimeout(() => {
                 navigate('/admin/color-list');
@@ -40,9 +50,14 @@ export default function Addcolor() {
             // dispatch(login(values))
         },
     });
+    useEffect(() => {
+        if (color.title && id) {
+            formik.setFieldValue('title', color.title);
+        }
+    }, [color]);
     return (
         <div>
-            <h3 className="mb-4 title">Add Color</h3>
+            <h3 className="mb-4 title">{id?'Edit':'Add'} Color</h3>
             <div className="">
                 <form action="" onSubmit={formik.handleSubmit}>
 
@@ -57,7 +72,7 @@ export default function Addcolor() {
                     <div className="error">
                         {formik.touched.title && formik.errors.title && <div >{formik.errors.title}</div>}
                     </div>
-                    <button type="submit" className="btn btn-success border-0 rounded-3 my-5 ">Add Color</button>
+                    <button type="submit" className="btn btn-success border-0 rounded-3 my-5 ">{id?'Edit':'Add'} Color</button>
                 </form>
             </div>
         </div>

@@ -51,8 +51,7 @@ export default function Brandlist() {
         </>
     }));
 
-    const handleDeleteBrand = (id) => {
-        alert(id)
+    const handleDelete = (id) => {
         dispatch(deleteBrand(id));
         setOpen(false);
     }
@@ -63,7 +62,7 @@ export default function Brandlist() {
             <div>
                 <Table columns={columns} dataSource={dataSource} />
             </div>
-            <CustomModal performAction={() => { handleDeleteBrand(brandId) }} title={'Are you sure you want to delete this brand?'} open={open} hideModal={hideModal} />
+            <CustomModal performAction={() => { handleDelete(brandId) }} title={'Are you sure you want to delete this brand?'} open={open} hideModal={hideModal} />
         </div>
     )
 }

@@ -104,7 +104,7 @@ export const brandSlice = createSlice({
             state.isLoading = false;
             state.isSuccess = true;
             state.isError = false;
-            const index = state.brands.findIndex(brand => brand.id === action.payload.id);
+            const index = state.brands.findIndex(brand => brand.id === action.payload._id);
             if (index !== -1) {
                 state.brands[index] = action.payload; // Update the brand in the array
             }

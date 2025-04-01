@@ -3,14 +3,20 @@ import CustomInput from '../components/CustomInput';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { createBlogCategory } from '../features/bcategory/bcategorySlice';
+import { createBlogCategory, getBlogCategory, updateBlogCategory } from '../features/bcategory/bcategorySlice';
 
 export default function Addblogcat() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { isSuccess, isError, isLoading, message } = useSelector((state) => state.bcategory);
+    const { id } = useParams();
+    const { bCategory, isSuccess, isError, isLoading, message } = useSelector((state) => state.bcategory);
+    useEffect(() => {
+        if (id !== undefined) {
+            dispatch(getBlogCategory(id));
+        }
+    }, [id]);
     useEffect(() => {
         if (isSuccess) {
             toast.success('Blog Category Added Successfully');
@@ -25,12 +31,15 @@ export default function Addblogcat() {
     });
     const formik = useFormik({
         initialValues: {
-            title: '',
+            title: bCategory.title || '',
         },
         validationSchema: schema,
         onSubmit: values => {
-            // console.log(values)
-            dispatch(createBlogCategory(values));
+            if (id) {
+                dispatch(updateBlogCategory({ id, ...values }));
+            } else {
+                dispatch(createBlogCategory(values));
+            }
             formik.resetForm();
             setTimeout(() => {
                 navigate('/admin/blog-category-list');
@@ -39,9 +48,14 @@ export default function Addblogcat() {
             // dispatch(login(values))
         },
     });
+    useEffect(() => {
+        if (bCategory.title && id) {
+            formik.setFieldValue('title', bCategory.title);
+        }
+    }, [bCategory]);
     return (
         <div>
-            <h3 className="mb-4 title">Add Blog Category</h3>
+            <h3 className="mb-4 title">{id ? 'Edit' : 'Add'} Blog Category</h3>
             <div className="">
                 <form action="" onSubmit={formik.handleSubmit}>
 
@@ -56,7 +70,7 @@ export default function Addblogcat() {
                     <div className="error">
                         {formik.touched.title && formik.errors.title && <div >{formik.errors.title}</div>}
                     </div>
-                    <button type="submit" className="btn btn-success border-0 rounded-3 my-5 ">Add Blog Category</button>
+                    <button type="submit" className="btn btn-success border-0 rounded-3 my-5 ">{id ? 'Edit' : 'Add'} Blog Category</button>
                 </form>
             </div>
         </div>
