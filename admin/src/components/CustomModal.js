@@ -3,7 +3,7 @@ import { Modal } from 'antd';
 export default function CustomModal({title,open,hideModal,performAction}) {
     return (
         <Modal
-            title="Modal"
+            title="Confirmation"
             open={open}
             onOk={performAction}
             onCancel={hideModal}
