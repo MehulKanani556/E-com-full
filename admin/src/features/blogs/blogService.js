@@ -13,7 +13,7 @@ const createBlog = async (blog) => {
 }
 const getBlog = async (id) => {
     const response = await axios.get(`${base_url}blog/${id}`,config);
-    return response.data;
+    return response.data.blog;
 }
 const updateBlog= async (id, blog) => {
     const response = await axios.put(`${base_url}blog/${id}`, blog,config);
