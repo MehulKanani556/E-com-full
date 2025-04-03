@@ -13,6 +13,7 @@ export default function Login() {
     email: Yup.string().email('Email should be valid').required('Email is required'),
     password: Yup.string().required('Password is required'),
   });
+  
 
   const formik = useFormik({
     initialValues: {
@@ -26,7 +27,7 @@ export default function Login() {
   });
 
   useEffect(() => {
-    if (!user == null || isSuccess) {
+    if (!user == null || isSuccess) {      
       navigate('admin')
     }
   }, [user, isLoding, isError, isSuccess, message]);

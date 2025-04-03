@@ -460,6 +460,17 @@ const getOrders = asyncHandler(async (req, res) => {
         throw new Error(error);
     }
 });
+const getOrderByUserId = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    validateMongoDbId(id);
+    try {
+        let userOrders = await Order.find({ _id: id }).populate("products.product").populate("orderby").exec();
+      
+        res.json(userOrders);
+    } catch (error) {
+        throw new Error(error);
+    }
+});
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
     const { status } = req.body;
@@ -477,4 +488,4 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         throw new Error(error);
     }
 });
-module.exports = { createUser, updateOrderStatus, getOrders, saveAddress, createOrder, emptyCart, applyCoupon, getUserCart, userCart, loginUser, getallUser, getaUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logoutUser, updatePassword, forgotPasswordToken, resetPassword, loginAdmin, getWishList };
+module.exports = { createUser, updateOrderStatus, getOrders, saveAddress, createOrder,getOrderByUserId, emptyCart, applyCoupon, getUserCart, userCart, loginUser, getallUser, getaUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logoutUser, updatePassword, forgotPasswordToken, resetPassword, loginAdmin, getWishList };

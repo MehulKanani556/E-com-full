@@ -14,12 +14,13 @@ import { Multiselect } from 'react-widgets/cjs';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import Dropzone from 'react-dropzone';
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice';
-import { createProduct } from '../features/product/productSlice';
-import { useNavigate } from 'react-router-dom';
+import { createProduct, getProduct, updateProduct } from '../features/product/productSlice';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 export default function Addprod() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { id } = useParams();
     const coloropt = [];
     const [selectedColor, setSelectedColor] = useState([]);
     const [imgs, setImgs] = useState([]);
@@ -27,13 +28,16 @@ export default function Addprod() {
         dispatch(getBrands());
         dispatch(getCategories());
         dispatch(getColors());
+        if (id !== undefined) {
+            dispatch(getProduct(id));
+        }
     }, []);
 
     const { brands } = useSelector((state) => state.brand);
     const { pCategories } = useSelector((state) => state.pcategory);
     const { colors } = useSelector((state) => state.color);
     const { images } = useSelector((state) => state.upload);
-    const { products, isSuccess, isError, isLoading, message } = useSelector((state) => state.product);
+    const { product, isSuccess, isError, isLoading, message } = useSelector((state) => state.product);
     useEffect(() => {
         if (isSuccess) {
             toast.success('Product Added Successfully');
@@ -75,20 +79,25 @@ export default function Addprod() {
     });
     const formik = useFormik({
         initialValues: {
-            title: '',
-            description: '',
-            price: '',
-            brand: '',
-            category: '',
-            tags: '',
-            color: [],
-            quantity: '',
-            images: [],
+            title: product.title || '',
+            description: product.description || '',
+            price: product.price || '',
+            brand: product.brand || '',
+            category: product.category || '',
+            tags: product.tags || '',
+            color: product.color || [],
+            quantity: product.quantity || '',
+            images: product.images || [],
         },
         validationSchema: userSchema,
         onSubmit: values => {
             // console.log(values);
-            dispatch(createProduct(values));
+            if (id) {
+                dispatch(updateProduct({ id, ...values }));
+            } else {
+
+                dispatch(createProduct(values));
+            }
             formik.resetForm();
             setImgs([]);
             setSelectedColor([]);
@@ -104,9 +113,39 @@ export default function Addprod() {
         formik.setFieldValue('color', e);
 
     }
+    useEffect(() => {
+        if (product.title && id) {
+            formik.setFieldValue('title', product.title);
+        }
+        if (product.description && id) {
+            formik.setFieldValue('description', product.description);
+        }
+        if (product.category && id) {
+            formik.setFieldValue('category', product.category);
+        }
+        if (product.brand && id) {
+            formik.setFieldValue('brand', product.brand);
+        }
+        if (product.tags && id) {
+            formik.setFieldValue('tags', product.tags);
+        }
+        if (product.quantity && id) {
+            formik.setFieldValue('quantity', product.quantity);
+        }
+        if (product.color && id) {
+            formik.setFieldValue('color', product.color);
+            setSelectedColor(product.color);
+        }
+        if (product.price && id) {
+            formik.setFieldValue('price', product.price);
+        }
+        if (product.images && id) {
+            formik.setFieldValue('images', product.images);
+        }
+    }, [product]);
     return (
         <div>
-            <h3 className="mb-4 title">Add Product</h3>
+            <h3 className="mb-4 title">{id ? 'Edit' : 'Add'} Product</h3>
             <div className="">
                 <form action="" className='d-flex gap-1 flex-column' onSubmit={formik.handleSubmit}>
                     <CustomInput
@@ -202,7 +241,7 @@ export default function Addprod() {
                         allowClear
                         className='w-100 '
                         placeholder='Select Colors'
-                        defaultValue={selectedColor}
+                        value={selectedColor}
                         onChange={(i) => handleColors(i)}
                         options={coloropt}
 
@@ -246,11 +285,8 @@ export default function Addprod() {
                                 </div>
                             )
                         })}
-
                     </div>
-
-
-                    <button type="submit" className="btn btn-success border-0 rounded-3 my-5 ">Add Product</button>
+                    <button type="submit" className="btn btn-success border-0 rounded-3 my-5 ">{id ? 'Edit' : 'Add'} Product</button>
                 </form>
             </div>
         </div>

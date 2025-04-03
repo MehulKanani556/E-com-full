@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table } from 'antd';
 import { BiEdit } from 'react-icons/bi';
 import { AiFillDelete } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../features/product/productSlice';
+import { deleteProduct, getProducts } from '../features/product/productSlice';
 import { Link } from 'react-router-dom';
+import CustomModal from '../components/CustomModal';
 // table
 const columns = [
     {
@@ -51,7 +52,7 @@ const columns = [
     {
         title: 'Price',
         dataIndex: 'price',
-        sorter: (a, b) => parseFloat(a.price.replace(/[^0-9.-]+/g,"")) - parseFloat(b.price.replace(/[^0-9.-]+/g,""))
+        sorter: (a, b) => parseFloat(a.price.replace(/[^0-9.-]+/g, "")) - parseFloat(b.price.replace(/[^0-9.-]+/g, ""))
     },
     {
         title: 'Action',
@@ -66,6 +67,15 @@ export default function Productlist() {
     useEffect(() => {
         dispatch(getProducts());
     }, []);
+    const [open, setOpen] = useState(false);
+    const [id, setId] = useState('');
+    const showModal = (id) => {
+        setOpen(true);
+        setId(id);
+    };
+    const hideModal = () => {
+        setOpen(false);
+    };
     const { products, isLoading, isError, isSuccess, message } = useSelector((state) => state.product);
     // const dataSource = Array.from({
     //     length: 46,
@@ -80,19 +90,25 @@ export default function Productlist() {
         title: product.title,
         brand: product.brand,
         category: product.category,
-        color: product.color,
+        color: product.color.join(', '),
         price: `$${product.price}`,
         action: <>
-            <Link to={'/'} className='fs-3 text-danger'><BiEdit /></Link>
-            <Link to={'/'} className='ms-3 fs-3 text-danger'><AiFillDelete /></Link>
+            <Link to={`/admin/product/${product._id}`} className='fs-3 text-danger'><BiEdit /></Link>
+            <button onClick={() => showModal(product._id)} className='ms-3 fs-3 text-danger  bg-transparent border-0'><AiFillDelete /></button>
         </>
     }));
+    const handleDelete = (id) => {
+        dispatch(deleteProduct(id));
+        setOpen(false);
+    }
     return (
         <div>
             <h3 className="mb-4 title">Product List</h3>
             <div>
                 <Table columns={columns} dataSource={dataSource} />
             </div>
+            <CustomModal performAction={() => { handleDelete(id) }} title={'Are you sure you want to delete this product?'} open={open} hideModal={hideModal} />
+
         </div>
     )
 }

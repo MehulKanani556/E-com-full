@@ -14,13 +14,10 @@ import { getCategories } from '../features/bcategory/bcategorySlice';
 export default function Addblog() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [desc, setDesc] = useState();
     const img = [];
     const { id } = useParams();
     const [imgs, setImgs] = useState([]);
-    const handleDesc = (e) => {
-        setDesc(e);
-    }
+  
     useEffect(() => {
         dispatch(getCategories());
     }, []);
@@ -29,7 +26,7 @@ export default function Addblog() {
     const { images } = useSelector((state) => state.upload);
     useEffect(() => {
         if (id !== undefined) {
-            dispatch(getBlog(id));
+            dispatch(getBlog(id));            
         }
     }, [id]);
     useEffect(() => {
@@ -55,6 +52,7 @@ export default function Addblog() {
         description: Yup.string().required('Description is required'),
         category: Yup.string().required('Category is required'),
     });
+    console.log(blog.images)
     const formik = useFormik({
         initialValues: {
             title: blog.title ||'',
@@ -80,7 +78,7 @@ export default function Addblog() {
             // dispatch(login(values))
         },
     });
-    console.log(blog)
+   
     useEffect(() => {
         if (blog.title && id) {
             formik.setFieldValue('title', blog.title);
@@ -157,11 +155,18 @@ export default function Addblog() {
                             return (
                                 <div key={j} className="m-2 position-relative">
                                     <button type='button' className='btn-close position-absolute ' onClick={() => dispatch(deleteImg(i.public_id))} style={{ top: '10px', left: '10px' }} ></button>
-                                    <img src={i.url} alt={i.name} width={200} height={200} />
+                                    <img src={i.url} width={200} height={200} alt="uploaded" />
                                 </div>
                             )
                         })}
-
+                        {/* {blog.images && blog.images.map((i, j) => {
+                            return (
+                                <div key={j} className="m-2 position-relative">
+                                    <button type='button' className='btn-close position-absolute ' onClick={() => dispatch(deleteImg(i?.public_id))} style={{ top: '10px', left: '10px' }} ></button>
+                                    <img src={i.url} width={200} height={200} alt="blog" />
+                                </div>
+                            )
+                        })} */}
                     </div>
                     <button type="submit" className="btn btn-success border-0 rounded-3 my-5 ">{id ? 'Edit' : 'Add'}     Blog</button>
                 </form>

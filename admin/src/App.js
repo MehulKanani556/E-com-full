@@ -22,6 +22,8 @@ import Addbrand from './pages/Addbrand';
 import Addprod from './pages/Addprod';
 import Addcoupon from './pages/Addcoupon';
 import Couponlist from './pages/Couponlist';
+import Viewenq from './pages/Viewenq';
+import Vieworder from './pages/Vieworder';
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
         <Route path="/admin" element={<MainLayout />} >
           <Route index element={<Dashboard />} />
           <Route path='enquiries' element={<Enquiries />} />
+          <Route path='enquiries/:id' element={<Viewenq />} />
           <Route path='blog-list' element={<Bloglist />} />
           <Route path='blog' element={<Addblog />} />
           <Route path='blog/:id' element={<Addblog />} />
@@ -40,6 +43,7 @@ function App() {
           <Route path='blog-category/:id' element={<Addblogcat />} />
           <Route path='blog-category-list' element={<Blogcatlist />} />
           <Route path='orders' element={<Orders />} />
+          <Route path='order/:id' element={<Vieworder />} />
           <Route path='customers' element={<Customers />} />
           <Route path='color-list' element={<Colorlist />} />
           <Route path='color' element={<Addcolor />} />
@@ -55,9 +59,8 @@ function App() {
           <Route path='category/:id' element={<Addcat />} />
           <Route path='product-list' element={<Productlist />} />
           <Route path='product' element={<Addprod />} />
-
+          <Route path='product/:id' element={<Addprod />} />
         </Route>
-
       </Routes>
     </Router>
   );

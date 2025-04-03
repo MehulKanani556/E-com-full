@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -18,16 +18,37 @@ import { ImBlog } from 'react-icons/im';
 import { IoIosNotifications } from 'react-icons/io';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css"
+import { useDispatch } from 'react-redux';
+import { logout } from '../features/auth/authSlice';
 const { Header, Sider, Content } = Layout;
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-
+const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+  const handleLogout = async () => {
+    try {
+      // dispatch(logout())
+
+      localStorage.clear();
+      setUser({});
+      window.location.href = '/';
+      // alert('Logged out successfully');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      alert('Failed to log out');
+    }
+  }
+ 
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -123,7 +144,7 @@ const MainLayout = () => {
                 },
                 {
                   key: 'coupon-list',
-                  icon: <RiCouponLine  className='fs-4' />,
+                  icon: <RiCouponLine className='fs-4' />,
                   label: 'Coupon-list',
                 }
               ]
@@ -188,19 +209,53 @@ const MainLayout = () => {
               <span className="badge bg-warning rounded-circle p-1 position-absolute">3</span>
             </div>
 
-            <div className="d-flex gap-3 align-items-center dropdown"  >
-              <div className="">
+            <div className="d-flex gap-3 align-items-center">
+              <div>
                 <img width={32} height={32} src="https://stroyka-admin.html.themeforest.scompiler.ru/variants/ltr/images/customers/customer-4-64x64.jpg" alt="" />
               </div>
-              <div role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                <h5 className='mb-0'>Mehul</h5>
-                <p className='mb-0'>mkanani556@gmail.com</p>
-              </div>
-              <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <div className="position-relative">
+                <div
+                  className="cursor-pointer"
+                  onClick={toggleDropdown}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <h5 className='mb-0 text-capitalize'>{user.firstname + ' ' + user.lastname}</h5>
+                  <p className='mb-0'>{user.email}</p>
+                </div>
+                {isDropdownOpen && (
+                  <div
+                    className="position-absolute bg-white shadow-sm rounded border"
+                    style={{
+                      top: '100%',
+                      right: 0,
+                      minWidth: '200px',
+                      zIndex: 1000
+                    }}
+                  >
+                    <ul className='list-group lh-1' style={{listStyle:'none'}} >
+                      <li className='py-3'  style={{ borderBottom: '1px solid #eee' }}>
+                        <Link
+                          to="/action"
+                          className=" px-3  text-dark text-decoration-none hover-bg-light"
+                         
+                        >
+                          View Profile
+                        </Link>
+                      </li>
+                      <li className='py-3'>
+                        <Link
+                          to=""
+                          onClick={handleLogout}
+                          className=" px-3  text-dark text-decoration-none hover-bg-light"
+                        >
+                          Signout
+                        </Link>
+                      </li>
+                    </ul>
 
-                <li className="py-2 "><Link to="/action" className="dropdown-item py-1 mb-1" style={{ "height": "auto", lineHeight: '20px' }}>View Profile</Link></li>
-                <li className="py-2 "><Link to="/something-else" className="dropdown-item py-1 mb-1" style={{ "height": "auto", lineHeight: '20px' }}>Signout</Link></li>
 
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -9,7 +9,9 @@ const initialState = {
     isSuccess: false,
     message: "",
     orders: [],
+    order:''
 };
+
 export const login = createAsyncThunk('auth/admin-login', async (user, thunkApi) => {
     try {
         return await authService.login(user)
@@ -24,11 +26,25 @@ export const getOrders = createAsyncThunk('order/get-orders', async (thunkApi) =
         return thunkApi.rejectWithValue(error)
     }
 });
+export const getOrderByUserId = createAsyncThunk('order/getorderbyuser', async (id,thunkApi) => {
+    try {
+        return await authService.getOrderByUserId(id);
+    } catch (error) {
+        return thunkApi.rejectWithValue(error)
+    }
+});
 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: {},
+    reducers: {
+        logout: (state) => {
+            state.user = null;
+            localStorage.removeItem('user');
+            window.location.href ="/"
+            
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(login.pending, (state) => {
             state.isLoading = true;
@@ -60,7 +76,24 @@ export const authSlice = createSlice({
             state.isSuccess = false;
             state.message = action.error;
         })
+        builder.addCase(getOrderByUserId.pending, (state) => {
+            state.isLoading = true;
+        })
+        builder.addCase(getOrderByUserId.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.order = action.payload[0].products;
+            state.isSuccess = true;
+            state.isError = false;
+        })
+        builder.addCase(getOrderByUserId.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isError = true;
+            state.isSuccess = false;
+            state.message = action.error;
+        })
     }
 })
+
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
