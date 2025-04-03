@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../components/BreadCrumb'
 import Meta from '../components/Meta'
 import ReactStars from "react-rating-stars-component";
@@ -10,8 +10,17 @@ import gr2 from '../images/gr2.svg'
 import gr3 from '../images/gr3.svg'
 import gr4 from '../images/gr4.svg'
 import Container from '../components/Container';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProducts } from '../features/product/productSlice';
+
 export default function OurStore() {
-  const [grid, setGrid] = useState(4)
+  const [grid, setGrid] = useState(4);
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.product);
+  console.log(products)
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
 
   return (
     <>
