@@ -871,3 +871,8 @@ footer .input-group-text {
   color: var(--color-777777);
 }
 /* Shipping Page ends here */
+
+.error{
+  color: red;
+  font-size: 12px;
+}

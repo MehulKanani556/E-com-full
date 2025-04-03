@@ -6,8 +6,8 @@ import Container from '../components/Container'
 import CustomInput from '../components/CustomInput'
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux'
-import { registerUser } from '../features/user/userSlice'
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../features/user/userSlice';
 
 const schema = yup.object({
   firstname: yup.string().required('First Name is required'),
@@ -59,14 +59,18 @@ export default function Signup() {
                   onChange={formik.handleChange('lastname')}
                   onBlur={formik.handleBlur('lastname')}
                   type="text" name='lastname' placeholder='Last Name' />
-                {formik.touched.lastname && formik.errors.lastname && <div >{formik.errors.lastname}</div>}
+                <div className="error">
+                  {formik.touched.lastname && formik.errors.lastname && <div >{formik.errors.lastname}</div>}
+                </div>
 
                 <CustomInput
                   value={formik.values.email}
                   onChange={formik.handleChange('email')}
                   onBlur={formik.handleBlur('email')}
                   type="email" name='email' placeholder='Email' />
-                {formik.touched.email && formik.errors.email && <div >{formik.errors.email}</div>}
+                <div className="error">
+                  {formik.touched.email && formik.errors.email && <div >{formik.errors.email}</div>}
+                </div>
 
 
                 <CustomInput
@@ -74,14 +78,18 @@ export default function Signup() {
                   onChange={formik.handleChange('mobile')}
                   onBlur={formik.handleBlur('mobile')}
                   type="tel" name='mobile' placeholder='Mobile Number' />
-                {formik.touched.mobile && formik.errors.mobile && <div >{formik.errors.mobile}</div>}
+                <div className="error">
+                  {formik.touched.mobile && formik.errors.mobile && <div >{formik.errors.mobile}</div>}
+                </div>
 
                 <CustomInput
                   value={formik.values.password}
                   onChange={formik.handleChange('password')}
                   onBlur={formik.handleBlur('password')}
                   type="password" name='password' placeholder='Password' />
-                {formik.touched.password && formik.errors.password && <div >{formik.errors.password}</div>}
+                <div className="error">
+                  {formik.touched.password && formik.errors.password && <div >{formik.errors.password}</div>}
+                </div>
 
 
 
