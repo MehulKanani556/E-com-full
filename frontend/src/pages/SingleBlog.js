@@ -1,26 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Meta from '../components/Meta'
 import BreadCrumb from '../components/BreadCrumb'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { HiOutlineArrowLeft } from 'react-icons/hi'
 import blog1 from '../images/blog-1.jpg'
 import Container from '../components/Container'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBlog } from '../features/blogs/blogSlice'
 export default function SingleBlog() {
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const { blog } = useSelector(state => state.blog);
+    useEffect(() => {
+        dispatch(getBlog(id));
+    })
     return (
         <>
-            <Meta title="Dynamic Blog Name" />
-            <BreadCrumb title={'Dynamic Blog Name'} />
+            <Meta title={blog?.title} />
+            <BreadCrumb title={blog?.title} />
             <Container class1="blog-wrapper home-wrapper-2 py-5 ">
                 <div className="row">
                     <div className="col-12">
                         <div className="single-blog-card">
-                            <Link to="/blog" className='d-flex align-items-center gap-10 '><HiOutlineArrowLeft className='fs-4' /> Go back to blogd</Link>
+                            <Link to="/blog" className='d-flex align-items-center gap-10 '><HiOutlineArrowLeft className='fs-4' /> Go back to blogs</Link>
                             <h3 className="title">
-                                A Beautiful Sunday Morning Renaissance
+                                {blog?.title}
                             </h3>
-                            <img src={blog1} className='img-fluid my-4 w-100' alt="blog" />
-                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores debitis, ratione esse voluptatem illo recusandae aliquid veritatis neque impedit ullam eligendi eius ut, est, doloribus sint atque. Eligendi, quae dolorum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates est illo eos unde nihil, libero enim ipsum nemo. Necessitatibus itaque placeat voluptatum corrupti doloremque eos veritatis eaque blanditiis quisquam a.
-                            </p>
+                            <img src={blog?.images?.[0]?.url} className='object-fit-cover my-4 ' height={'400px'} alt="blog" />
+                            <p dangerouslySetInnerHTML={{__html:blog?.description}}></p>
                         </div>
                     </div>
                 </div>

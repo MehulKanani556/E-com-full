@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Meta from '../components/Meta'
 import BreadCrumb from '../components/BreadCrumb'
 import BlogCard from '../components/BlogCard'
 import Container from '../components/Container'
+import { useDispatch, useSelector } from 'react-redux'
+import { getBlogs } from '../features/blogs/blogSlice'
 
 export default function Blog() {
+    const dispatch = useDispatch();
+    const { blogs } = useSelector(state => state.blog)
+    useEffect(() => {
+        dispatch(getBlogs())
+    }, []);
     return (
         <>
             <Meta title="Blogs" />
@@ -28,10 +35,9 @@ export default function Blog() {
                     </div>
                     <div className="col-9">
                         <div className="row">
-                            <div className="col-6 mb-3"><BlogCard /></div>
-                            <div className="col-6 mb-3"><BlogCard /></div>
-                            <div className="col-6 mb-3"><BlogCard /></div>
-                            <div className="col-6 mb-3"><BlogCard /></div>
+                            {blogs.map(blog => (
+                                <div key={blog.id} className="col-6 mb-3"><BlogCard blog={blog} /></div>
+                            ))}
                         </div>
                     </div>
                 </div>

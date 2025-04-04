@@ -112,6 +112,7 @@ const addToWishlist = asyncHandler(async (req, res) => {
     const { _id } = req.user;
     const { prodId } = req.body;
     try {
+        console.log(prodId);
         const user = await User.findById(_id);
         const alreadyadded = user.wishlist.find((id) => id.toString() === prodId);
         if (alreadyadded) {

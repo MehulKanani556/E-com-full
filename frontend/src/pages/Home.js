@@ -1,13 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Marquee from 'react-fast-marquee'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import BlogCard from '../components/BlogCard'
 import ProdCard from '../components/ProdCard'
 import SpecialProduct from '../components/SpecialProduct'
 import Container from '../components/Container'
 import { services } from '../utils/Data'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { getBlogs } from '../features/blogs/blogSlice'
+import { addToWishList, getProducts } from '../features/product/productSlice'
+import prodcompare from '../images/prodcompare.svg';
+import wish from '../images/wish.svg';
+import addcart from '../images/add-cart.svg';
+import view from '../images/view.svg';
+import ReactStars from "react-rating-stars-component";
 export default function Home() {
+  let location = useLocation();
+  const dispatch = useDispatch();
+  const { blogs } = useSelector(state => state.blog);
+  const { products } = useSelector(state => state.product);
+  useEffect(() => {
+    dispatch(getBlogs());
+    dispatch(getProducts());
+  }, []);
+  const addToWish = (id) => {
+    dispatch(addToWishList(id));
+  }
   return (
     <>
       <Container class1='home-wrapper-1 py-5'>
@@ -183,10 +201,53 @@ export default function Home() {
           <div className="col-12">
             <h3 className="section-heading">Featured Collection</h3>
           </div>
-          <ProdCard />
-          <ProdCard />
-          <ProdCard />
-          <ProdCard />
+          {products && products.map((item, index) => {
+            if (item.tags === "featured") {
+              return (
+                <div key={index} className='col-3'>
+                  <Link to={'/product/:id'} className="product-card w-100 position-relative my-2">
+                    <div className="wishlist-icon position-absolute">
+                      <button className='border-0 bg-transparent' onClick={(e) => addToWish(item._id)}>
+                        <img src={wish} alt="wish list" />
+                      </button>
+                    </div>
+                    <div className="product-image ">
+                      <img src={item?.images[0]?.url} className='img-fluid' alt="product images" />
+                      <img src={item?.images[1]?.url} className='img-fluid' alt="product images" />
+                    </div>
+                    <div className="product-details">
+                      <h6 className='brands'>{item?.brand}</h6>
+                      <h5 className="product-title">
+                        {item?.title.substr(0, 60) + '...'}
+                      </h5>
+                      <ReactStars
+                        count={5}
+                        size={24}
+                        activeColor="#ffd700"
+                        value={item?.totalRating}
+                        edit={false}
+                      />
+                      <p
+
+                        className={`description d-none`}
+                        dangerouslySetInnerHTML={{ __html: item?.description }}
+                      ></p>
+                      <p className="price">
+                        $ {item?.price}
+                      </p>
+                    </div>
+                    <div className="action-bar position-absolute">
+                      <div className='d-flex flex-column gap-15'>
+                        <button className='border-0 bg-transparent'><img src={prodcompare} alt="prodcompare" /></button>
+                        <button className='border-0 bg-transparent'><img src={view} alt="view" /></button>
+                        <button className='border-0 bg-transparent'><img src={addcart} alt="add cart" /></button>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )
+            }
+          })}
         </div>
       </Container>
       <Container class1="famous-wrapper py-5 home-wrapper-2">
@@ -245,8 +306,22 @@ export default function Home() {
             <h3 className="section-heading">Special Products</h3>
           </div>
           <div className="row">
-            <SpecialProduct />
-            <SpecialProduct />
+            {products && products.map((item, index) => {
+              if (item.tags === "special") {
+                return (
+                  <SpecialProduct
+                    key={index}
+                    title={item?.title}
+                    brand={item?.brand}
+                    price={item?.price}
+                    rating={item?.totalRating}
+                    sold={item?.sold}
+                    qty={item?.quantity}
+                    image={item?.images?.[0]?.url}
+                  />
+                )
+              }
+            })}
           </div>
         </div>
       </Container>
@@ -257,11 +332,59 @@ export default function Home() {
           </div>
         </div>
         <div className="row">
+          {products && products.map((item, index) => {
+            if (item.tags === "popular") {
+              return (
+                <div key={index} className='col-3'>
+                  <Link to={'/product/:id'} className="product-card w-100 position-relative my-2">
+                    <div className="wishlist-icon position-absolute">
+                      <button className='border-0 bg-transparent' onClick={(e) => addToWish(item._id)}>
+                        <img src={wish} alt="wish list" />
+                      </button>
+                    </div>
+                    <div className="product-image">
+                      <img src={item?.images[0]?.url} className='img-fluid' alt="product images" />
+                      <img src={item?.images[1]?.url} className='img-fluid' alt="product images" />
+                    </div>
+                    <div className="product-details">
+                      <h6 className='brands'>{item?.brand}</h6>
+                      <h5 className="product-title">
+                        {item?.title.substr(0, 60) + '...'}
+                      </h5>
+                      <ReactStars
+                        count={5}
+                        size={24}
+                        activeColor="#ffd700"
+                        value={item?.totalRating}
+                        edit={false}
+                      />
+                      <p
 
+                        className={`description d-none`}
+                        dangerouslySetInnerHTML={{ __html: item?.description }}
+                      ></p>
+                      <p className="price">
+                        $ {item?.price}
+                      </p>
+                    </div>
+                    <div className="action-bar position-absolute">
+                      <div className='d-flex flex-column gap-15'>
+                        <button className='border-0 bg-transparent'><img src={prodcompare} alt="prodcompare" /></button>
+                        <button className='border-0 bg-transparent'><img src={view} alt="view" /></button>
+                        <button className='border-0 bg-transparent'><img src={addcart} alt="add cart" /></button>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              )
+            }
+          })}
+          {/* <ProdCard data={products} /> */}
+
+          {/* <ProdCard />
           <ProdCard />
           <ProdCard />
-          <ProdCard />
-          <ProdCard />
+          <ProdCard /> */}
         </div>
       </Container>
       <Container class1="marque-wrapper py-5">
@@ -305,12 +428,11 @@ export default function Home() {
           </div>
         </div>
         <div className="row">
-          <div className="col-3"><BlogCard /></div>
-          <div className="col-3"><BlogCard /></div>
-          <div className="col-3"><BlogCard /></div>
-          <div className="col-3"><BlogCard /></div>
+          {blogs.slice(0, 4).map(blog => (
+            <div key={blog.id} className="col-3  overflow-hidden"><BlogCard blog={blog} /></div>
+          ))}
         </div>
-      </Container> 
+      </Container>
     </>
   )
 }

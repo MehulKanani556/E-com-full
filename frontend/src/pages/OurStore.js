@@ -195,14 +195,8 @@ export default function OurStore() {
             </div>
             <div className="products-list row  pb-5">
 
-              <ProdCard grid={grid} />
-              <ProdCard grid={grid} />
-              <ProdCard grid={grid} />
-              <ProdCard grid={grid} />
-              <ProdCard grid={grid} />
-              <ProdCard grid={grid} />
-              <ProdCard grid={grid} />
-              <ProdCard grid={grid} />
+              <ProdCard data={products} grid={grid} />
+             
             </div>
           </div>
         </div>
