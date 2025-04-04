@@ -1,4 +1,4 @@
 
-Time = 11:00
+Time = 00:00
 
-https://www.youtube.com/watch?v=Gcfq-Sa9FNc&list=PL0g02APOH8okXhOQLOLcB_nifs1U41im5&index=21&ab_channel=DevelopersCorner
+https://www.youtube.com/watch?v=7U6d9srgO7g&list=PL0g02APOH8okXhOQLOLcB_nifs1U41im5&index=24
