@@ -1,4 +1,4 @@
 
-Time = 12:00
+Time = 25:00
 
 https://www.youtube.com/watch?v=Kgmux0QsMOQ&list=PL0g02APOH8okXhOQLOLcB_nifs1U41im5&index=25&ab_channel=DevelopersCorner

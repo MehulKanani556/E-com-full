@@ -12,14 +12,25 @@ import watch from '../images/watch.jpg'
 import Container from '../components/Container';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProduct } from '../features/product/productSlice';
+import { toast } from "react-toastify";
+import { addToCart } from '../features/user/userSlice';
+
 // import watch from '../../public/images/watch.jpg'
 export default function SingleProduct() {
+    const [color, setColor] = useState(null);
+    const [quantity, setQuantity] = useState(1);
     const { product } = useSelector(state => state.product)
     const props = { zoomWidth: 600, img: product?.images?.[0]?.url };
     const [orderedProduct, setOrderedProduct] = useState(false);
     const dispatch = useDispatch();
     const uploadCart = () => {
-
+        if (color == null) {
+            toast.error("Please choose color");
+            return false;
+        }
+        else{
+            dispatch(addToCart({productId:product._id,quantity,color,price:product.price}))
+        }
     }
     const { id } = useParams();
     useEffect(() => {
@@ -45,7 +56,9 @@ export default function SingleProduct() {
                     <div className="col-6">
                         <div className="main-product-image">
                             <div className="">
-                                <ReactImageZoom {...props} />
+                                {product?.images?.[0]?.url && (
+                                    <ReactImageZoom {...props} />
+                                )}
                             </div>
                         </div>
                         <div className="other-product-image d-flex flex-wrap gap-15">
@@ -102,15 +115,15 @@ export default function SingleProduct() {
                                 </div>
                                 <div className="d-flex gap-10 flex-column mt-2 mb-3">
                                     <h3 className='product-heading'> Color :</h3>
-                                    <Color />
+                                    <Color data={product?.color} setColor={setColor} />
                                 </div>
                                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
                                     <h3 className='product-heading'> Quantity :</h3>
                                     <div className="">
-                                        <input type="number" name='' min={1} max={10} style={{ width: '70px' }} className='form-control' />
+                                        <input type="number" name='' min={1} max={10} value={quantity} onChange={(e) => setQuantity(e.target.value)} style={{ width: '70px' }} className='form-control' />
                                     </div>
                                     <div className="d-flex  gap-30 align-items-center ms-5">
-                                        <button type="submit" className="button border-0" onClick={()=>{uploadCart()}}>Add TO Cart</button>
+                                        <button type="submit" className="button border-0" onClick={() => { uploadCart(product?._id) }}>Add TO Cart</button>
                                         <button className='button signup'>Buy It Now</button>
                                     </div>
                                 </div>
