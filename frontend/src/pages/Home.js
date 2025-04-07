@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Marquee from 'react-fast-marquee'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import BlogCard from '../components/BlogCard'
 import ProdCard from '../components/ProdCard'
 import SpecialProduct from '../components/SpecialProduct'
@@ -16,6 +16,7 @@ import view from '../images/view.svg';
 import ReactStars from "react-rating-stars-component";
 export default function Home() {
   let location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { blogs } = useSelector(state => state.blog);
   const { products } = useSelector(state => state.product);
@@ -205,7 +206,7 @@ export default function Home() {
             if (item.tags === "featured") {
               return (
                 <div key={index} className='col-3'>
-                  <Link to={'/product/:id'} className="product-card w-100 position-relative my-2">
+                  <div  className="product-card w-100 position-relative my-2">
                     <div className="wishlist-icon position-absolute">
                       <button className='border-0 bg-transparent' onClick={(e) => addToWish(item._id)}>
                         <img src={wish} alt="wish list" />
@@ -239,11 +240,11 @@ export default function Home() {
                     <div className="action-bar position-absolute">
                       <div className='d-flex flex-column gap-15'>
                         <button className='border-0 bg-transparent'><img src={prodcompare} alt="prodcompare" /></button>
-                        <button className='border-0 bg-transparent'><img src={view} alt="view" /></button>
+                        <button className='border-0 bg-transparent'><img onClick={()=>{navigate(`/product/${item._id}`)}} src={view} alt="view" /></button>
                         <button className='border-0 bg-transparent'><img src={addcart} alt="add cart" /></button>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               )
             }
@@ -311,6 +312,7 @@ export default function Home() {
                 return (
                   <SpecialProduct
                     key={index}
+                    id={item?._id}
                     title={item?.title}
                     brand={item?.brand}
                     price={item?.price}
@@ -336,7 +338,7 @@ export default function Home() {
             if (item.tags === "popular") {
               return (
                 <div key={index} className='col-3'>
-                  <Link to={'/product/:id'} className="product-card w-100 position-relative my-2">
+                  <div className="product-card w-100 position-relative my-2">
                     <div className="wishlist-icon position-absolute">
                       <button className='border-0 bg-transparent' onClick={(e) => addToWish(item._id)}>
                         <img src={wish} alt="wish list" />
@@ -370,11 +372,11 @@ export default function Home() {
                     <div className="action-bar position-absolute">
                       <div className='d-flex flex-column gap-15'>
                         <button className='border-0 bg-transparent'><img src={prodcompare} alt="prodcompare" /></button>
-                        <button className='border-0 bg-transparent'><img src={view} alt="view" /></button>
+                        <button className='border-0 bg-transparent'><img onClick={()=>{navigate(`/product/${item?._id}`)}} src={view} alt="view" /></button>
                         <button className='border-0 bg-transparent'><img src={addcart} alt="add cart" /></button>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               )
             }

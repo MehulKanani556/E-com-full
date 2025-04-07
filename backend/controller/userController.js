@@ -312,35 +312,17 @@ const getWishList = asyncHandler(async (req, res) => {
 });
 
 const userCart = asyncHandler(async (req, res) => {
-    const { cart } = req.body;
+    const {  productId, color, quantity, price } = req.body;
     const { _id } = req.user;
     validateMongoDbId(_id);
     try {
-        let products = [];
-        const user = await User.findById(_id);
-        // check if user already have product in cart
-        const alreadyExistCart = await Cart.findOne({ orderby: user._id });
-        if (alreadyExistCart) {
-            await Cart.deleteOne({ _id: alreadyExistCart._id }); // Updated line
-            // alreadyExistCart.remove();
-        }
-        for (let i = 0; i < cart.length; i++) {
-            let object = {};
-            object.product = cart[i]._id;
-            object.count = cart[i].count;
-            object.color = cart[i].color;
-            let getPrice = await Product.findById(cart[i]._id).select('price').exec();
-            object.price = getPrice.price;
-            products.push(object);
-        }
-        let cartTotal = 0;
-        for (let i = 0; i < products.length; i++) {
-            cartTotal = cartTotal + products[i].price * products[i].count;
-        }
+
         let newCart = await new Cart({
-            products,
-            cartTotal,
-            orderby: user._id,
+            userId: _id,
+            productId,
+            color,
+            quantity,
+            price
         }).save();
         res.json(newCart);
     } catch (error) {
@@ -465,7 +447,7 @@ const getOrderByUserId = asyncHandler(async (req, res) => {
     validateMongoDbId(id);
     try {
         let userOrders = await Order.find({ _id: id }).populate("products.product").populate("orderby").exec();
-      
+
         res.json(userOrders);
     } catch (error) {
         throw new Error(error);
@@ -488,4 +470,4 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         throw new Error(error);
     }
 });
-module.exports = { createUser, updateOrderStatus, getOrders, saveAddress, createOrder,getOrderByUserId, emptyCart, applyCoupon, getUserCart, userCart, loginUser, getallUser, getaUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logoutUser, updatePassword, forgotPasswordToken, resetPassword, loginAdmin, getWishList };
+module.exports = { createUser, updateOrderStatus, getOrders, saveAddress, createOrder, getOrderByUserId, emptyCart, applyCoupon, getUserCart, userCart, loginUser, getallUser, getaUser, deleteUser, updateUser, blockUser, unblockUser, handleRefreshToken, logoutUser, updatePassword, forgotPasswordToken, resetPassword, loginAdmin, getWishList };

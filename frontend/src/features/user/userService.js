@@ -23,9 +23,14 @@ const getUserWishList = async () => {
     const response = await axios.get(`${base_url}user/wishlist`,config);
     return response.data;
 }
+const addToCart = async (data) => {
+    const response = await axios.post(`${base_url}user/cart`,data,config);
+    return response.data;
+}
 const authService ={
     register,
     login,
     getUserWishList,
+    addToCart
 }
 export default authService;

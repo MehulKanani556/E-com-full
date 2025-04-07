@@ -2,7 +2,7 @@ import React from 'react'
 import ReactStars from "react-rating-stars-component";
 import { Link } from 'react-router-dom';
 import watch from '../images/watch.jpg'
-export default function SpecialProduct({ title, brand, rating, price, sold, qty,image }) {
+export default function SpecialProduct({ title, brand, rating, price, sold, qty,image,id }) {
     console.log(qty / qty + sold * 100)
     return (
         <div className='col-6'>
@@ -47,7 +47,7 @@ export default function SpecialProduct({ title, brand, rating, price, sold, qty,
                                     aria-valuemax={100} />
                             </div>
                         </div>
-                        <Link className='button'>Add to Cart</Link>
+                        <Link className='button' to={`/product/${id}`}>View</Link>
                     </div>
                 </div>
             </div>
