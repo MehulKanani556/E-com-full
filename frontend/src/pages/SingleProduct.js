@@ -5,7 +5,7 @@ import ProdCard from '../components/ProdCard'
 import ReactStars from "react-rating-stars-component";
 import ReactImageZoom from 'react-image-zoom';
 import Color from '../components/Color'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { TbGitCompare } from 'react-icons/tb';
 import { AiOutlineHeart } from 'react-icons/ai';
 import watch from '../images/watch.jpg'
@@ -13,13 +13,16 @@ import Container from '../components/Container';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProduct } from '../features/product/productSlice';
 import { toast } from "react-toastify";
-import { addToCart } from '../features/user/userSlice';
+import { addToCart, getCart } from '../features/user/userSlice';
 
 // import watch from '../../public/images/watch.jpg'
 export default function SingleProduct() {
+    const navigate = useNavigate();
     const [color, setColor] = useState(null);
     const [quantity, setQuantity] = useState(1);
-    const { product } = useSelector(state => state.product)
+    const { product } = useSelector(state => state.product);
+    const { cart } = useSelector((state) => state.auth);
+    const [alreadyAdded, setAlreadyAdded] = useState(false)
     const props = { zoomWidth: 600, img: product?.images?.[0]?.url };
     const [orderedProduct, setOrderedProduct] = useState(false);
     const dispatch = useDispatch();
@@ -28,14 +31,15 @@ export default function SingleProduct() {
             toast.error("Please choose color");
             return false;
         }
-        else{
-            dispatch(addToCart({productId:product._id,quantity,color,price:product.price}))
+        else {
+            dispatch(addToCart({ productId: product._id, quantity, color, price: product.price }))
         }
     }
     const { id } = useParams();
     useEffect(() => {
         if (id) {
             dispatch(getProduct(id));
+            dispatch(getCart());
         }
     }, [id]);
     const copyToClipboard = (text) => {
@@ -47,6 +51,12 @@ export default function SingleProduct() {
         document.execCommand('copy')
         textField.remove()
     }
+
+    useEffect(() => {
+        const found = cart.some(item => item.productId._id === id);
+        setAlreadyAdded(found);
+    }, [cart, id]);
+
     return (
         <>
             <Meta title="Product Name" />
@@ -113,17 +123,25 @@ export default function SingleProduct() {
 
                                     </div>
                                 </div>
-                                <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                                    <h3 className='product-heading'> Color :</h3>
-                                    <Color data={product?.color} setColor={setColor} />
-                                </div>
+                                {!alreadyAdded &&
+                                    <>
+                                        <div className="d-flex gap-10 flex-column mt-2 mb-3">
+                                            <h3 className='product-heading'> Color :</h3>
+                                            <Color data={product?.color} setColor={setColor} />
+                                        </div>
+                                    </>
+                                }
                                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
-                                    <h3 className='product-heading'> Quantity :</h3>
-                                    <div className="">
-                                        <input type="number" name='' min={1} max={10} value={quantity} onChange={(e) => setQuantity(e.target.value)} style={{ width: '70px' }} className='form-control' />
-                                    </div>
+                                    {!alreadyAdded &&
+                                        <>
+                                            <h3 className='product-heading'> Quantity :</h3>
+                                            <div className="">
+                                                <input type="number" name='' min={1} max={10} value={quantity} onChange={(e) => setQuantity(e.target.value)} style={{ width: '70px' }} className='form-control' />
+                                            </div>
+                                        </>
+                                    }
                                     <div className="d-flex  gap-30 align-items-center ms-5">
-                                        <button type="submit" className="button border-0" onClick={() => { uploadCart(product?._id) }}>Add TO Cart</button>
+                                        <button type="submit" className="button border-0" onClick={() => { alreadyAdded ? navigate('/cart') : uploadCart(product?._id) }}>{alreadyAdded ? "Go To Cart":"Add To Cart"}</button>
                                         <button className='button signup'>Buy It Now</button>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BsSearch } from 'react-icons/bs';
 import { NavLink, Link } from 'react-router-dom';
 import compare from '../images/compare.svg';
@@ -6,7 +6,25 @@ import wishlist from '../images/wishlist.svg';
 import user from '../images/user.svg';
 import cart from '../images/cart.svg';
 import menu from '../images/menu.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCart } from '../features/user/userSlice';
 const Header = () => {
+  const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.auth);
+  useEffect(() => {
+    dispatch(getCart());
+  }, []);
+
+  const calculateTotal = () => {
+    let total = 0;
+    if (cart) {
+      cart.forEach(item => {
+        total += item.price * item.quantity;
+      });
+    }
+    return total;
+  };
+
   return (
     <>
       <header className="header-top-strip py-3">
@@ -69,9 +87,9 @@ const Header = () => {
                     <img src={cart} alt="cart" />
                     <div className='d-flex flex-column gap-10'>
                       <span className="badge bg-white text-dark">
-                        0
+                        {cart.length || 0}
                       </span>
-                      <p className='mb-0'>$ 500</p>
+                      <p className='mb-0'>$ {calculateTotal()}</p>
                     </div>
                   </Link>
                 </div>

@@ -58,7 +58,7 @@ export default function ProdCard(props) {
                             <div className="action-bar position-absolute">
                                 <div className='d-flex flex-column gap-15'>
                                     <button className='border-0 bg-transparent'><img src={prodcompare} alt="prodcompare" /></button>
-                                    <button className='border-0 bg-transparent'><img onClick={()=>{navigate(`/product/${item?.id}`)}} src={view} alt="view" /></button>
+                                    <button className='border-0 bg-transparent'><img onClick={()=>{navigate(`/product/${item?._id}`)}} src={view} alt="view" /></button>
                                     <button className='border-0 bg-transparent'><img src={addcart} alt="add cart" /></button>
                                 </div>
                             </div>

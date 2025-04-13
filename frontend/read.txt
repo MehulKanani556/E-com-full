@@ -1,4 +1,6 @@
+#11
 
-Time = 25:00
+Time = 27:00
 
-https://www.youtube.com/watch?v=Kgmux0QsMOQ&list=PL0g02APOH8okXhOQLOLcB_nifs1U41im5&index=25&ab_channel=DevelopersCorner
+
+https://www.youtube.com/watch?v=BMVdR_3Piw0&list=PL0g02APOH8okXhOQLOLcB_nifs1U41im5&index=32&ab_channel=DevelopersCorner

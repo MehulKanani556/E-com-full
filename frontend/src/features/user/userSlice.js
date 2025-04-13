@@ -32,6 +32,34 @@ export const getUserWishList = createAsyncThunk('auth/user-wishlist', async (thu
         return thunkApi.rejectWithValue(error)
     }
 });
+export const getCart = createAsyncThunk('auth/user-cart', async (thunkApi) => {
+    try {
+        return await authService.getCart()
+    } catch (error) {
+        return thunkApi.rejectWithValue(error)
+    }
+});
+export const removeProdCart = createAsyncThunk('auth/delete-product-cart', async (id,thunkApi) => {
+    try {
+        return await authService.removeProdCart(id);
+    } catch (error) {
+        return thunkApi.rejectWithValue(error)
+    }
+});
+export const updateProdCart = createAsyncThunk('auth/update-product-cart', async (data,thunkApi) => {
+    try {
+        return await authService.updateProdCart(data);
+    } catch (error) {
+        return thunkApi.rejectWithValue(error)
+    }
+});
+export const createOrder = createAsyncThunk('auth/create-order', async (data,thunkApi) => {
+    try {
+        return await authService.createOrder(data);
+    } catch (error) {
+        return thunkApi.rejectWithValue(error)
+    }
+});
 const getCustomerFromLocalStorage = localStorage.getItem('customer') ? JSON.parse(localStorage.getItem('customer')) : null;
 
 const initialState = {
@@ -130,6 +158,92 @@ export const authSlice = createSlice({
             state.user = null;           
             state.message = "Rejected";
            
+        });
+        builder.addCase(getCart.pending, (state) => {
+            state.isLoading = true;
+        })
+        builder.addCase(getCart.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
+            state.cart = action.payload;
+            // if(state.isSuccess){
+            //     toast.info("Product Add To Cart")
+            // }
+        })
+        builder.addCase(getCart.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.isError = true;
+            state.user = null;           
+            state.message = "Rejected";
+           
+        });
+        builder.addCase(removeProdCart.pending, (state) => {
+            state.isLoading = true;
+        })
+        builder.addCase(removeProdCart.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
+            state.deletedCartProduct = action.payload;
+            if(state.isSuccess){
+                toast.info("Product Delete From Cart Successfully")
+            }
+        })
+        builder.addCase(removeProdCart.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.isError = true;
+            state.user = null;           
+            state.message = "Rejected";
+            if(state.isError){
+                toast.error("Something went wrong !")
+            }
+        });
+        builder.addCase(updateProdCart.pending, (state) => {
+            state.isLoading = true;
+        })
+        builder.addCase(updateProdCart.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
+            state.updateCartProduct = action.payload;
+            // if(state.isSuccess){
+            //     toast.info("Product Update From Cart Successfully")
+            // }
+        })
+        builder.addCase(updateProdCart.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.isError = true;
+            state.user = null;           
+            state.message = "Rejected";
+            // if(state.isError){
+            //     toast.error("Something went wrong !")
+            // }
+        });
+        builder.addCase(createOrder.pending, (state) => {
+            state.isLoading = true;
+        })
+        builder.addCase(createOrder.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.isError = false;
+            state.order = action.payload;
+            // if(state.isSuccess){
+            //     toast.info("Product Update From Cart Successfully")
+            // }
+        })
+        builder.addCase(createOrder.rejected, (state, action) => {
+            state.isLoading = false;
+            state.isSuccess = false;
+            state.isError = true;
+            state.user = null;           
+            state.message = "Rejected";
+            // if(state.isError){
+            //     toast.error("Something went wrong !")
+            // }
         });
         
     }
