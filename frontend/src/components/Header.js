@@ -3,14 +3,14 @@ import { BsSearch } from 'react-icons/bs';
 import { NavLink, Link } from 'react-router-dom';
 import compare from '../images/compare.svg';
 import wishlist from '../images/wishlist.svg';
-import user from '../images/user.svg';
-import cart from '../images/cart.svg';
+import userimg from '../images/user.svg';
+import cartimg from '../images/cart.svg';
 import menu from '../images/menu.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCart } from '../features/user/userSlice';
 const Header = () => {
   const dispatch = useDispatch();
-  const { cart } = useSelector((state) => state.auth);
+  const { cart, user } = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(getCart());
   }, []);
@@ -77,14 +77,19 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link to="/login" className='d-flex align-items-center gap-10 text-white' >
-                    <img src={user} alt="user" />
-                    <p className='mb-0'>Login <br /> My Account</p>
+                  <Link to={user == null ?"/login":""} className='d-flex align-items-center gap-10 text-white' >
+                    <img src={userimg} alt="user" />
+                    {console.log(user)}
+                    {user == null ?
+                      <p className='mb-0'>Login <br /> My Account</p>
+                      :
+                      <p className='mb-0'>Welcome <br />{user?.firstname}</p>
+                    }
                   </Link>
                 </div>
                 <div>
                   <Link to="/cart" className='d-flex align-items-center gap-10 text-white' >
-                    <img src={cart} alt="cart" />
+                    <img src={cartimg} alt="cart" />
                     <div className='d-flex flex-column gap-10'>
                       <span className="badge bg-white text-dark">
                         {cart.length || 0}

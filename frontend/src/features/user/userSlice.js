@@ -107,7 +107,8 @@ export const authSlice = createSlice({
             state.user = action.payload;
             if(state.isSuccess){
                 localStorage.setItem("token", action.payload.token)
-                toast.info("User Login Successfully")
+                toast.info("User Login Successfully");
+                
             }
         })
         builder.addCase(login.rejected, (state, action) => {
