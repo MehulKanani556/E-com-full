@@ -231,9 +231,9 @@ export const authSlice = createSlice({
             state.isSuccess = true;
             state.isError = false;
             state.order = action.payload;
-            // if(state.isSuccess){
-            //     toast.info("Product Update From Cart Successfully")
-            // }
+             if(state.isSuccess){
+                 toast.success(" Ordered Successfully")
+             }
         })
         builder.addCase(createOrder.rejected, (state, action) => {
             state.isLoading = false;
@@ -241,9 +241,9 @@ export const authSlice = createSlice({
             state.isError = true;
             state.user = null;           
             state.message = "Rejected";
-            // if(state.isError){
-            //     toast.error("Something went wrong !")
-            // }
+             if(state.isError){
+                 toast.error("Something went wrong !")
+             }
         });
         
     }
